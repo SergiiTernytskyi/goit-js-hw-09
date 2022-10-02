@@ -7,6 +7,10 @@ const notiflixOptions = {
   timeout: 5000,
 };
 
+let firstDelay = 0;
+let stepNumber = 0;
+let amountNumber = 0;
+
 const formRef = document.querySelector(".form");
 formRef.addEventListener("submit", onFormSubmit);
 
@@ -29,7 +33,7 @@ function onFormSubmit(event) {
       .catch(onError);
   }
 
-  event.currentTarget.reset();
+  // event.currentTarget.reset();
   // delay.value = 0;
   // step.value = 0;
   // amount.value = 0;
