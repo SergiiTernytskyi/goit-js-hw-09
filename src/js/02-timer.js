@@ -22,7 +22,7 @@ class Timer {
     this.refs = {};
     this.notiflixOptions = {
       width: "360px",
-      position: "center-center",
+      position: "center-top",
       clickToClose: true,
       fontSize: "16px",
       timeout: 4000,
