@@ -1,11 +1,13 @@
 import { Notify } from "notiflix/build/notiflix-notify-aio";
+const notiflixOptions = {
+  width: "360px",
+  position: "right-top",
+  clickToClose: true,
+  fontSize: "16px",
+  timeout: 5000,
+};
 
 const formRef = document.querySelector(".form");
-
-let firstDelay = null;
-let stepNumber = null;
-let amountNumber = null;
-
 formRef.addEventListener("submit", onFormSubmit);
 
 function onFormSubmit(event) {
@@ -14,34 +16,50 @@ function onFormSubmit(event) {
     elements: { delay, step, amount },
   } = event.currentTarget;
 
-  firstDelay = delay.value;
-  stepNumber = step.value;
-  amountNumber = amount.value;
+  firstDelay = Number.parseInt(delay.value);
+  stepNumber = Number.parseInt(step.value);
+  amountNumber = Number.parseInt(amount.value);
 
-  // createPromise(amountNumber, firstDelay)
-  //   .then(({ position, delay }) => {
-  //     console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-  //   })
-  //   .catch(({ position, delay }) => {
-  //     console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-  //   });
+  for (let i = 0; i < amountNumber; i += 1) {
+    const calculatedDelay = firstDelay + i * stepNumber;
+    const promisePosition = i + 1;
+
+    createPromise(promisePosition, calculatedDelay)
+      .then(onSucsess)
+      .catch(onError);
+  }
+
+  event.currentTarget.reset();
+  // delay.value = 0;
+  // step.value = 0;
+  // amount.value = 0;
 }
 
 function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
 
-  const calculatedDelay =
-    Number.parseInt(firstDelay) + Number.parseInt(stepNumber);
-
-  console.log(calculatedDelay);
-
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (shouldResolve) {
-        resolve();
-      } else {
-        reject();
-      }
-    }, delay);
+    if (shouldResolve) {
+      setTimeout(() => {
+        resolve({ position, delay });
+      }, delay);
+    } else {
+      setTimeout(() => {
+        reject({ position, delay });
+      }, delay);
+    }
   });
+}
+
+function onSucsess({ position, delay }) {
+  console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
+  Notify.success(
+    `Fulfilled promise ${position} in ${delay}ms`,
+    notiflixOptions
+  );
+}
+
+function onError({ position, delay }) {
+  console.log(`❌ Rejected promise ${position} in ${delay}ms`);
+  Notify.failure(`Rejected promise ${position} in ${delay}ms`, notiflixOptions);
 }
