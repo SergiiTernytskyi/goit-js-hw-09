@@ -24,15 +24,18 @@ function onFormSubmit(event) {
   stepNumber = Number.parseInt(step.value);
   amountNumber = Number.parseInt(amount.value);
 
-  for (let i = 0; i < amountNumber; i += 1) {
-    const calculatedDelay = firstDelay + i * stepNumber;
-    const promisePosition = i + 1;
+  if (firstDelay < 0 || stepNumber < 0 || amountNumber < 0) {
+    Notify.warning("Enter values, that are not negative", notiflixOptions);
+  } else {
+    for (let i = 0; i < amountNumber; i += 1) {
+      const calculatedDelay = firstDelay + i * stepNumber;
+      const promisePosition = i + 1;
 
-    createPromise(promisePosition, calculatedDelay)
-      .then(onSucsess)
-      .catch(onError);
+      createPromise(promisePosition, calculatedDelay)
+        .then(onSucsess)
+        .catch(onError);
+    }
   }
-
   // event.currentTarget.reset();
   // delay.value = 0;
   // step.value = 0;
